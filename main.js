@@ -13,14 +13,18 @@ let isQuitting = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 700,
+    width: 1400,
+    height: 1000,
+    minWidth: 940,
+    minHeight: 600,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
     },
     icon: path.join(__dirname, 'assets/icon.ico'),
+    autoHideMenuBar: true, 
+    frame: true, 
   });
 
   const startUrl = isDev
@@ -29,9 +33,13 @@ function createWindow() {
 
   mainWindow.loadURL(startUrl);
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
+  // Removido a abertura automática do DevTools
+  // if (isDev) {
+  //   mainWindow.webContents.openDevTools();
+  // }
+  
+  // Centralizar a janela na tela
+  mainWindow.center();
 
   mainWindow.on('close', (event) => {
     if (!isQuitting) {
