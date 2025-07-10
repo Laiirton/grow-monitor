@@ -17,19 +17,22 @@ function StockDisplay({ stockData, activeCategory }) {
   const items = stockData[activeCategory];
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4">
-      <h2 className="text-xl font-semibold mb-4">{categoryTitles[activeCategory] || 'Estoque'}</h2>
+    <div className="bg-[#1f2937] rounded-xl p-6 shadow-lg border border-[#2a3042]">
+      <h2 className="text-2xl font-semibold mb-6 pb-3 border-b border-[#374151]">{categoryTitles[activeCategory] || 'Estoque'}</h2>
       
       {items.length === 0 ? (
-        <p className="text-gray-400">Nenhum item disponível nesta categoria</p>
+        <div className="p-8 text-center">
+          <div className="text-5xl mb-4">😢</div>
+          <p className="text-gray-400 text-lg">Nenhum item disponível nesta categoria</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {items.map((item, index) => (
             <div 
               key={`${item.name}-${index}`}
-              className="bg-gray-700 p-3 rounded-lg flex flex-col items-center"
+              className="bg-[#252e3f] hover:bg-[#2a334a] transition-all duration-200 p-4 rounded-xl flex flex-col items-center shadow-md border border-[#374151]"
             >
-              <div className="w-16 h-16 flex items-center justify-center mb-2">
+              <div className="w-20 h-20 flex items-center justify-center mb-4 bg-[#1a202c] rounded-xl p-3">
                 <img 
                   src={item.image} 
                   alt={item.name}
@@ -37,9 +40,9 @@ function StockDisplay({ stockData, activeCategory }) {
                 />
               </div>
               <div className="text-center">
-                <div className="font-medium">{item.name}</div>
-                <div className="text-sm text-gray-300 mt-1">
-                  Quantidade: <span className="font-bold text-green-400">{item.value}</span>
+                <div className="font-medium text-white text-lg">{item.name}</div>
+                <div className="text-sm text-gray-300 mt-2">
+                  Quantidade: <span className="font-bold text-green-400 ml-1">{item.value}</span>
                 </div>
               </div>
             </div>
