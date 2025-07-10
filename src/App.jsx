@@ -11,19 +11,38 @@ function App() {
   const [monitoredItems, setMonitoredItems] = useState([]);
   const [categoriesWithMonitoredItems, setCategoriesWithMonitoredItems] = useState({});
   const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
+  const [showUpdateToast, setShowUpdateToast] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   
   const fetchStockData = async () => {
     try {
+      // Indica que está atualizando
+      setIsUpdating(true);
+      
       // Usando a API do Electron através do preload
       const data = await window.electron.apiService.fetchStockData();
       setStockData(data);
       setLoading(false);
       setLastUpdateTime(new Date());
       
+      // Mostra a notificação toast
+      setShowUpdateToast(true);
+      
+      // Esconde automaticamente após 3 segundos
+      setTimeout(() => {
+        setShowUpdateToast(false);
+      }, 3000);
+      
       checkMonitoredItems(data);
+      
+      // Finaliza a animação após um breve delay para feedback visual
+      setTimeout(() => {
+        setIsUpdating(false);
+      }, 800);
     } catch (err) {
       setError('Erro ao carregar dados: ' + err);
       setLoading(false);
+      setIsUpdating(false);
     }
   };
 
@@ -104,6 +123,16 @@ function App() {
 
   return (
     <div className="flex h-screen bg-[#1a202c] text-white overflow-hidden">
+      {/* Notificação de atualização */}
+      {showUpdateToast && (
+        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center animate-fade-in-down">
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Estoque atualizado com sucesso!</span>
+        </div>
+      )}
+      
       <Sidebar 
         setActiveCategory={setActiveCategory}
         activeCategory={activeCategory}
@@ -117,9 +146,13 @@ function App() {
             
             <button
               onClick={fetchStockData}
-              className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center shadow-md"
+              disabled={isUpdating}
+              className={`${
+                isUpdating ? 'bg-green-700' : 'bg-green-600 hover:bg-green-500'
+              } text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center shadow-md`}
             >
-              <span className="mr-2">↻</span> Atualizar Estoque
+              <span className={`mr-2 inline-block ${isUpdating ? 'animate-spin' : ''}`}>↻</span> 
+              {isUpdating ? 'Atualizando...' : 'Atualizar Estoque'}
             </button>
           </div>
           
