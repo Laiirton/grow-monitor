@@ -10,25 +10,27 @@ const categories = [
 
 function Sidebar({ activeCategory, setActiveCategory }) {
   return (
-    <div className="w-64 bg-gray-800 h-full p-4 flex flex-col">
-      <div className="text-xl font-bold mb-8 flex items-center">
-        <span className="mr-2">🌿</span> 
-        <span>Menu</span>
+    <div className="w-64 bg-[#171c26] h-full flex flex-col shadow-xl border-r border-[#2a3042] overflow-hidden">
+      <div className="py-6 px-4 border-b border-[#2a3042]">
+        <div className="flex items-center justify-center">
+          <span className="text-2xl mr-3">🌿</span>
+          <span className="text-xl font-bold text-white">Menu</span>
+        </div>
       </div>
       
-      <nav className="flex-1">
-        <ul>
+      <nav className="flex-1 px-3 py-4">
+        <ul className="space-y-2">
           {categories.map((category) => (
-            <li key={category.id} className="mb-2">
+            <li key={category.id}>
               <button
                 onClick={() => setActiveCategory(category.id)}
-                className={`flex items-center w-full p-3 rounded-md transition-colors ${
+                className={`flex items-center w-full py-3 px-4 rounded-lg transition-all duration-200 ${
                   activeCategory === category.id 
-                    ? 'bg-green-700 text-white' 
-                    : 'hover:bg-gray-700 text-gray-300'
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white font-medium shadow-lg' 
+                    : 'hover:bg-[#242a38] text-gray-300'
                 }`}
               >
-                <span className="mr-3 text-xl">{category.icon}</span>
+                <span className="mr-4 text-xl">{category.icon}</span>
                 <span>{category.name}</span>
               </button>
             </li>
@@ -36,8 +38,8 @@ function Sidebar({ activeCategory, setActiveCategory }) {
         </ul>
       </nav>
       
-      <div className="mt-auto pt-4 border-t border-gray-700 text-xs text-gray-400">
-        <div>Grow Monitor v1.0.0</div>
+      <div className="px-4 py-3 mt-auto bg-[#141921]">
+        <div className="text-xs text-gray-500 text-center">Grow Monitor v1.0.0</div>
       </div>
     </div>
   );
