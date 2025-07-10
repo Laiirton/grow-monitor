@@ -29,4 +29,48 @@
   .card-hover {
     @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
   }
+  
+  .rainbow-glow {
+    position: relative;
+  }
+  
+  .rainbow-glow::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    z-index: -1;
+    border-radius: 0.75rem;
+    background: linear-gradient(
+      45deg,
+      rgba(100, 200, 255, 0.5), 
+      rgba(120, 255, 150, 0.5), 
+      rgba(200, 180, 255, 0.5), 
+      rgba(255, 200, 100, 0.5), 
+      rgba(100, 200, 255, 0.5)
+    );
+    background-size: 300%;
+    animation: rainbow-animation 6s ease infinite;
+    filter: blur(3px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes rainbow-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.subtle-monitored {
+  border: 1px solid rgba(72, 187, 120, 0.5);
+  box-shadow: 0 0 8px rgba(72, 187, 120, 0.15);
 }
