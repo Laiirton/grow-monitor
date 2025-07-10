@@ -59,14 +59,14 @@ function App() {
     return () => clearInterval(interval);
   }, []);
   
-  const checkMonitoredItems = (data) => {
-    if (!data || monitoredItems.length === 0) return;
+  // Função auxiliar para verificar categorias com itens monitorados
+  const updateCategoriesWithMonitoredItems = (data, items) => {
+    if (!data || !items || items.length === 0) return {};
     
     const categoriesWithItems = {};
+    const categories = ['seedsStock', 'gearStock', 'eggStock', 'honeyStock', 'cosmeticsStock'];
     
-    monitoredItems.forEach(item => {
-      const categories = ['seedsStock', 'gearStock', 'eggStock', 'honeyStock', 'cosmeticsStock'];
-      
+    items.forEach(item => {
       categories.forEach(category => {
         const foundItem = data[category]?.find(stockItem => 
           stockItem.name.toLowerCase() === item.name.toLowerCase()
@@ -76,6 +76,25 @@ function App() {
           // Marca esta categoria como tendo itens monitorados disponíveis
           categoriesWithItems[category] = true;
         }
+      });
+    });
+    
+    return categoriesWithItems;
+  };
+
+  const checkMonitoredItems = (data) => {
+    if (!data || monitoredItems.length === 0) return;
+    
+    let updatedMonitoredItems = [...monitoredItems];
+    let hasUpdates = false;
+    
+    monitoredItems.forEach(item => {
+      const categories = ['seedsStock', 'gearStock', 'eggStock', 'honeyStock', 'cosmeticsStock'];
+      
+      categories.forEach(category => {
+        const foundItem = data[category]?.find(stockItem => 
+          stockItem.name.toLowerCase() === item.name.toLowerCase()
+        );
         
         if (foundItem && foundItem.value > item.lastValue) {
           window.electron.notificationApi.showNotification(
@@ -83,18 +102,25 @@ function App() {
             `${foundItem.name} está disponível (${foundItem.value} unidades)!`
           );
           
-          const updatedItems = monitoredItems.map(monItem => 
+          updatedMonitoredItems = updatedMonitoredItems.map(monItem => 
             monItem.name === item.name 
               ? {...monItem, lastValue: foundItem.value}
               : monItem
           );
           
-          setMonitoredItems(updatedItems);
-          localStorage.setItem('monitoredItems', JSON.stringify(updatedItems));
+          hasUpdates = true;
         }
       });
     });
     
+    // Atualiza os itens monitorados se houver alterações
+    if (hasUpdates) {
+      setMonitoredItems(updatedMonitoredItems);
+      localStorage.setItem('monitoredItems', JSON.stringify(updatedMonitoredItems));
+    }
+    
+    // Atualiza as categorias com itens monitorados
+    const categoriesWithItems = updateCategoriesWithMonitoredItems(data, updatedMonitoredItems);
     setCategoriesWithMonitoredItems(categoriesWithItems);
   };
   
@@ -109,12 +135,24 @@ function App() {
     const updatedItems = [...monitoredItems, newItem];
     setMonitoredItems(updatedItems);
     localStorage.setItem('monitoredItems', JSON.stringify(updatedItems));
+    
+    // Atualiza o estado das categorias com itens monitorados
+    if (stockData) {
+      const updatedCategories = updateCategoriesWithMonitoredItems(stockData, updatedItems);
+      setCategoriesWithMonitoredItems(updatedCategories);
+    }
   };
   
   const removeMonitoredItem = (name) => {
     const updatedItems = monitoredItems.filter(item => item.name !== name);
     setMonitoredItems(updatedItems);
     localStorage.setItem('monitoredItems', JSON.stringify(updatedItems));
+    
+    // Atualiza o estado das categorias com itens monitorados
+    if (stockData) {
+      const updatedCategories = updateCategoriesWithMonitoredItems(stockData, updatedItems);
+      setCategoriesWithMonitoredItems(updatedCategories);
+    }
   };
 
   if (loading) return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">Carregando...</div>;
