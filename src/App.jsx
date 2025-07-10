@@ -105,7 +105,8 @@ function App() {
             <div className="lg:col-span-2">
               <StockDisplay 
                 stockData={stockData} 
-                activeCategory={activeCategory} 
+                activeCategory={activeCategory}
+                monitoredItems={monitoredItems}
               />
             </div>
             
