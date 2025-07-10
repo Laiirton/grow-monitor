@@ -9,13 +9,16 @@ function App() {
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('seedsStock');
   const [monitoredItems, setMonitoredItems] = useState([]);
-
+  const [categoriesWithMonitoredItems, setCategoriesWithMonitoredItems] = useState({});
+  const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
+  
   const fetchStockData = async () => {
     try {
       // Usando a API do Electron através do preload
       const data = await window.electron.apiService.fetchStockData();
       setStockData(data);
       setLoading(false);
+      setLastUpdateTime(new Date());
       
       checkMonitoredItems(data);
     } catch (err) {
@@ -40,6 +43,8 @@ function App() {
   const checkMonitoredItems = (data) => {
     if (!data || monitoredItems.length === 0) return;
     
+    const categoriesWithItems = {};
+    
     monitoredItems.forEach(item => {
       const categories = ['seedsStock', 'gearStock', 'eggStock', 'honeyStock', 'cosmeticsStock'];
       
@@ -47,6 +52,11 @@ function App() {
         const foundItem = data[category]?.find(stockItem => 
           stockItem.name.toLowerCase() === item.name.toLowerCase()
         );
+        
+        if (foundItem && foundItem.value > 0) {
+          // Marca esta categoria como tendo itens monitorados disponíveis
+          categoriesWithItems[category] = true;
+        }
         
         if (foundItem && foundItem.value > item.lastValue) {
           window.electron.notificationApi.showNotification(
@@ -65,6 +75,8 @@ function App() {
         }
       });
     });
+    
+    setCategoriesWithMonitoredItems(categoriesWithItems);
   };
   
   const addMonitoredItem = (name) => {
@@ -95,11 +107,21 @@ function App() {
       <Sidebar 
         setActiveCategory={setActiveCategory}
         activeCategory={activeCategory}
+        categoriesWithMonitoredItems={categoriesWithMonitoredItems}
       />
       
       <div className="flex flex-col flex-1 overflow-hidden">
         <div className="p-6 flex-1 overflow-auto">
-          <h1 className="text-3xl font-bold mb-6 text-white">Grow Monitor</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-3xl font-bold text-white">Grow Monitor</h1>
+            
+            <button
+              onClick={fetchStockData}
+              className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center shadow-md"
+            >
+              <span className="mr-2">↻</span> Atualizar Estoque
+            </button>
+          </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
@@ -121,7 +143,10 @@ function App() {
         </div>
         
         <div className="px-6 py-2 border-t border-gray-800 text-xs text-gray-500 bg-[#171c26] flex justify-between items-center">
-          <div>Última atualização: {new Date().toLocaleTimeString()}</div>
+          <div className="flex items-center">
+            <span>Última atualização:</span>
+            <span className="ml-1 text-green-400 font-medium">{lastUpdateTime.toLocaleTimeString()}</span>
+          </div>
           <div>Grow Monitor v1.0.0</div>
         </div>
       </div>
