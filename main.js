@@ -13,7 +13,7 @@ let isQuitting = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1400,
+    width: 1500,
     height: 1000,
     minWidth: 940,
     minHeight: 600,
