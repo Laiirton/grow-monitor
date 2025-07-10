@@ -4,8 +4,8 @@ const categories = [
   { id: 'seedsStock', name: 'Sementes', icon: '🌱' },
   { id: 'gearStock', name: 'Ferramentas', icon: '🔧' },
   { id: 'eggStock', name: 'Ovos', icon: '🥚' },
-  { id: 'honeyStock', name: 'Mel', icon: '🍯' },
   { id: 'cosmeticsStock', name: 'Decorações', icon: '🏡' },
+  { id: 'honeyStock', name: 'Mel', icon: '🍯' },
 ];
 
 function Sidebar({ activeCategory, setActiveCategory }) {
