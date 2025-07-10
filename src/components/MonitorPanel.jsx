@@ -12,48 +12,52 @@ function MonitorPanel({ monitoredItems, addMonitoredItem, removeMonitoredItem })
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4">
-      <h2 className="text-xl font-semibold mb-4">Painel de Monitoramento</h2>
+    <div className="bg-[#1f2937] rounded-xl p-6 shadow-lg border border-[#2a3042] h-full">
+      <h2 className="text-2xl font-semibold mb-6 pb-3 border-b border-[#374151]">Painel de Monitoramento</h2>
       
-      <form onSubmit={handleSubmit} className="mb-4">
-        <div className="flex">
+      <form onSubmit={handleSubmit} className="mb-6">
+        <div className="flex shadow-lg">
           <input
             type="text"
             value={newItemName}
             onChange={(e) => setNewItemName(e.target.value)}
             placeholder="Nome do item para monitorar"
-            className="flex-1 bg-gray-700 rounded-l-md border border-gray-600 px-3 py-2 text-white focus:outline-none focus:ring-1 focus:ring-green-500"
+            className="flex-1 bg-[#252e3f] rounded-l-lg border border-[#374151] px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
           <button
             type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white px-4 rounded-r-md"
+            className="bg-green-600 hover:bg-green-500 text-white px-4 rounded-r-lg transition-colors duration-200 font-medium text-lg"
+            title="Adicionar item para monitorar"
           >
             +
           </button>
         </div>
       </form>
       
-      <div className="space-y-2">
-        <h3 className="font-medium text-gray-300 mb-2">Itens Monitorados:</h3>
+      <div className="mb-6">
+        <h3 className="font-medium text-gray-200 mb-4 text-lg">Itens Monitorados:</h3>
         
         {monitoredItems.length === 0 ? (
-          <p className="text-gray-400 text-sm">Nenhum item sendo monitorado</p>
+          <div className="bg-[#252e3f] rounded-lg p-5 text-center">
+            <p className="text-gray-400 text-sm">Nenhum item sendo monitorado</p>
+          </div>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {monitoredItems.map((item) => (
               <li 
                 key={item.name}
-                className="bg-gray-700 rounded-md p-3 flex justify-between items-center"
+                className="bg-[#252e3f] hover:bg-[#2a334a] transition-all duration-200 rounded-lg p-4 flex justify-between items-center border border-[#374151] shadow-md"
               >
                 <div>
-                  <div className="font-medium">{item.name}</div>
-                  <div className="text-xs text-gray-400">
-                    Último valor: {item.lastValue}
+                  <div className="font-medium text-white">{item.name}</div>
+                  <div className="text-xs text-gray-400 mt-1">
+                    Último valor: <span className="font-medium text-green-400">{item.lastValue}</span>
                   </div>
                 </div>
                 <button
                   onClick={() => removeMonitoredItem(item.name)}
-                  className="text-red-400 hover:text-red-300 focus:outline-none"
+                  className="bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-full w-7 h-7 flex items-center justify-center focus:outline-none transition-colors duration-200"
+                  title="Remover monitoramento"
                 >
                   ✕
                 </button>
@@ -63,10 +67,13 @@ function MonitorPanel({ monitoredItems, addMonitoredItem, removeMonitoredItem })
         )}
       </div>
       
-      <div className="mt-4 pt-4 border-t border-gray-700">
-        <p className="text-xs text-gray-400">
-          Você receberá notificações quando um item monitorado estiver disponível.
-        </p>
+      <div className="mt-auto pt-4 border-t border-[#374151] bg-[#1a2233] mx-[-24px] px-6 py-4 rounded-b-xl">
+        <div className="flex items-center text-sm text-gray-400">
+          <span className="mr-2 text-lg">🔔</span>
+          <p>
+            Você receberá notificações quando um item monitorado estiver disponível.
+          </p>
+        </div>
       </div>
     </div>
   );
