@@ -91,18 +91,18 @@ function App() {
   if (error) return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">{error}</div>;
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
+    <div className="flex h-screen bg-[#1a202c] text-white overflow-hidden">
       <Sidebar 
         setActiveCategory={setActiveCategory}
         activeCategory={activeCategory}
       />
       
       <div className="flex flex-col flex-1 overflow-hidden">
-        <div className="p-4 flex-1 overflow-auto">
-          <h1 className="text-2xl font-bold mb-6">Grow Monitor</h1>
+        <div className="p-6 flex-1 overflow-auto">
+          <h1 className="text-3xl font-bold mb-6 text-white">Grow Monitor</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
               <StockDisplay 
                 stockData={stockData} 
                 activeCategory={activeCategory} 
@@ -119,8 +119,9 @@ function App() {
           </div>
         </div>
         
-        <div className="px-4 py-2 border-t border-gray-700 text-xs text-gray-400">
-          Última atualização: {new Date().toLocaleTimeString()}
+        <div className="px-6 py-2 border-t border-gray-800 text-xs text-gray-500 bg-[#171c26] flex justify-between items-center">
+          <div>Última atualização: {new Date().toLocaleTimeString()}</div>
+          <div>Grow Monitor v1.0.0</div>
         </div>
       </div>
     </div>
