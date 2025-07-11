@@ -23,77 +23,119 @@ function MonitorPanel({ monitoredItems, addMonitoredItem, removeMonitoredItem })
   };
 
   return (
-    <div className="bg-[#1f2937] rounded-xl p-6 shadow-lg border border-[#2a3042] h-full flex flex-col">
-      <h2 className="text-2xl font-semibold mb-6 pb-3 border-b border-[#374151]">Monitoring Panel</h2>
-      
-      <form onSubmit={handleSubmit} className="mb-4">
-        <div className="flex shadow-lg">
-          <input
-            type="text"
-            value={newItemName}
-            onChange={(e) => setNewItemName(e.target.value)}
-            placeholder="Item name to monitor"
-            className="flex-1 bg-[#252e3f] rounded-l-lg border border-[#374151] px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          />
-          <button
-            type="submit"
-            className="bg-green-600 hover:bg-green-500 text-white px-4 rounded-r-lg transition-colors duration-200 font-medium text-lg"
-            title="Add item to monitor"
-          >
-            +
-          </button>
-        </div>
-        {duplicateError && (
-          <div className="mt-2 px-3 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg text-sm animate-fade-in">
-            <span className="mr-2">⚠️</span>
-            {duplicateError}
+    <div className="h-full flex flex-col bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 backdrop-blur-sm overflow-hidden">
+      <header className="p-4 lg:p-6 border-b border-slate-700/50 bg-slate-800/50">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+            <span className="text-xl">🔔</span>
           </div>
-        )}
-      </form>
+          <div>
+            <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+              Monitor Panel
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              Track your favorite items
+            </p>
+          </div>
+        </div>
+      </header>
       
-      <div className="mb-4 flex-1 flex flex-col min-h-0">
-        <h3 className="font-medium text-gray-200 mb-3 text-lg">Monitored Items:</h3>
+      <div className="p-4 lg:p-6 border-b border-slate-700/50">
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="flex items-stretch rounded-xl shadow-lg bg-slate-700/50 border border-slate-600/50">
+            <input
+              type="text"
+              value={newItemName}
+              onChange={(e) => setNewItemName(e.target.value)}
+              placeholder="Enter item name to monitor"
+              className="flex-1 bg-transparent px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-inset rounded-l-xl"
+            />
+            <button
+              type="submit"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 py-3 transition-all duration-200 font-bold text-xl flex items-center justify-center w-12 rounded-r-xl hover:shadow-lg shrink-0"
+              title="Add item to monitor"
+            >
+              +
+            </button>
+          </div>
+          
+          {duplicateError && (
+            <div className="px-4 py-3 bg-red-500/20 border border-red-500/30 text-red-300 rounded-xl text-sm animate-fade-in backdrop-blur-sm">
+              <div className="flex items-center">
+                <span className="mr-2 text-base">⚠️</span>
+                <span>{duplicateError}</span>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
+      
+      <div className="flex-1 overflow-hidden p-4 lg:p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-slate-200 text-lg">
+            Monitored Items
+          </h3>
+          <div className="px-3 py-1 bg-slate-700/50 rounded-full text-xs text-slate-400">
+            {monitoredItems.length}
+          </div>
+        </div>
         
         {monitoredItems.length === 0 ? (
-          <div className="bg-[#252e3f] rounded-lg p-5 text-center">
-            <p className="text-gray-400 text-sm">No items currently being monitored</p>
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-gradient-to-r from-slate-600 to-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">📝</span>
+              </div>
+              <p className="text-slate-400 text-sm font-medium mb-2">No items monitored yet</p>
+              <p className="text-slate-500 text-xs">Add items above to get notified when they're available</p>
+            </div>
           </div>
         ) : (
-          <div className="overflow-y-auto pr-1 flex-1 monitor-scrollbar max-h-[300px]">
-            <ul className="space-y-3">
-              {monitoredItems.map((item) => (
-                <li 
+          <div className="h-full overflow-y-auto monitor-scrollbar">
+            <div className="space-y-3">
+              {monitoredItems.map((item, index) => (
+                <div 
                   key={item.name}
-                  className="bg-[#252e3f] hover:bg-[#2a334a] transition-all duration-200 rounded-lg p-4 flex justify-between items-center border border-[#374151] shadow-md"
+                  className="bg-slate-700/30 backdrop-blur-sm hover:bg-slate-700/50 transition-all duration-300 rounded-xl p-4 border border-slate-600/30 hover:border-slate-500/50 animate-bounce-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div>
-                    <div className="font-medium text-white">{item.name}</div>
-                    <div className="text-xs text-gray-400 mt-1">
-                      Last value: <span className="font-medium text-green-400">{item.lastValue}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-white text-sm lg:text-base truncate">
+                        {item.name}
+                      </div>
+                      <div className="text-xs text-slate-400 mt-1 flex items-center">
+                        <span className="mr-1">Last value:</span>
+                        <span className="font-medium text-emerald-400 px-2 py-0.5 bg-emerald-500/20 rounded-full">
+                          {item.lastValue}
+                        </span>
+                      </div>
                     </div>
+                    <button
+                      onClick={() => removeMonitoredItem(item.name)}
+                      className="ml-3 w-8 h-8 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+                      title="Remove from monitoring"
+                    >
+                      <span className="text-sm">✕</span>
+                    </button>
                   </div>
-                  <button
-                    onClick={() => removeMonitoredItem(item.name)}
-                    className="bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-full w-7 h-7 flex items-center justify-center focus:outline-none transition-colors duration-200"
-                    title="Remove from monitoring"
-                  >
-                    ✕
-                  </button>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
       </div>
       
-      <div className="mt-auto pt-4 border-t border-[#374151] bg-[#1a2233] mx-[-24px] px-6 py-4 rounded-b-xl">
-        <div className="flex items-center text-sm text-gray-400">
-          <span className="mr-2 text-lg">🔔</span>
-          <p>
-            You'll receive notifications when a monitored item is available.
+      <footer className="p-4 lg:p-6 bg-slate-800/50 border-t border-slate-700/50">
+        <div className="flex items-center text-xs text-slate-400">
+          <div className="w-6 h-6 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-xs">🔔</span>
+          </div>
+          <p className="leading-relaxed">
+            You'll receive notifications when monitored items become available in the stock.
           </p>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
