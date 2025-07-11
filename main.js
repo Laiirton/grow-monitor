@@ -38,7 +38,7 @@ function createWindow() {
   //   mainWindow.webContents.openDevTools();
   // }
   
-  // Centralizar a janela na tela
+  // Center the window on the screen
   mainWindow.center();
 
   mainWindow.on('close', (event) => {
@@ -56,21 +56,21 @@ function createTray() {
   try {
     tray = new Tray(iconPath);
   } catch (error) {
-    console.error('Erro ao carregar o ícone:', error);
-    // Fallback para ícone padrão do Electron
+    console.error('Error loading icon:', error);
+    // Fallback to default Electron icon
     tray = new Tray();
   }
   
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Abrir', click: () => mainWindow.show() },
+    { label: 'Open', click: () => mainWindow.show() },
     { type: 'separator' },
-    { label: 'Sair', click: () => {
+    { label: 'Exit', click: () => {
       isQuitting = true;
       app.quit();
     }}
   ]);
   
-  tray.setToolTip('Grow Monitor');
+  tray.setToolTip('Garden Stock');
   tray.setContextMenu(contextMenu);
   
   tray.on('click', () => {
@@ -99,7 +99,7 @@ ipcMain.on('show-notification', (event, { title, body }) => {
   new Notification({ title, body }).show();
 });
 
-// Função para buscar dados da API sem problemas de CORS
+// Function to fetch API data without CORS issues
 ipcMain.handle('fetch-stock-data', () => {
   return new Promise((resolve, reject) => {
     const apiUrl = 'https://grow-a-garden-api-omega.vercel.app/api/stock';
