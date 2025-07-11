@@ -105,7 +105,8 @@ function App() {
         if (foundItem) {
           window.electron.notificationApi.showNotification(
             '🌱 Item disponível!',
-            `${foundItem.name} está disponível no estoque!`
+            `${foundItem.name} está disponível no estoque!`,
+            foundItem.image
           );
           updatedMonitoredItems = updatedMonitoredItems.map(monItem => 
             monItem.name === item.name 
@@ -222,7 +223,6 @@ function App() {
             <span className="ml-1 text-green-400 font-medium">{lastUpdateTime.toLocaleTimeString()}</span>
             <span className="ml-4">Next update in <span className="text-green-400 font-medium">{nextUpdateSeconds}s</span></span>
           </div>
-          <div>Garden Stock v1.0.0</div>
         </div>
       </div>
     </div>
