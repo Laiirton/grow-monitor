@@ -5,7 +5,10 @@ const squirrelStartup = require('electron-squirrel-startup');
 const https = require('https');
 const http = require('http');
 
+
 if (squirrelStartup) app.quit();
+
+app.setAppUserModelId('garden-stock');
 
 let mainWindow;
 let tray = null;
