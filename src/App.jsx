@@ -189,14 +189,6 @@ function App() {
         <header className="p-4 lg:p-6 bg-slate-900/50 backdrop-blur-sm border-b border-slate-700/50">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center">
-                  <span className="text-lg">🌱</span>
-                </div>
-                <h1 className="text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
-                  Garden Stock
-                </h1>
-              </div>
               <div className="hidden md:flex items-center space-x-4 text-sm text-slate-400">
                 <span>Last update: <span className="text-emerald-400 font-medium">{lastUpdateTime.toLocaleTimeString()}</span></span>
                 <span>Next: <span className="text-emerald-400 font-medium">{nextUpdateSeconds}s</span></span>
@@ -239,20 +231,6 @@ function App() {
             </div>
           </div>
         </main>
-        
-        <footer className="px-4 lg:px-6 py-3 bg-slate-900/50 backdrop-blur-sm border-t border-slate-700/50">
-          <div className="flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 space-y-2 md:space-y-0">
-            <div className="flex items-center space-x-4">
-              <span>🌿 Garden Stock Monitor</span>
-              <span>•</span>
-              <span>{monitoredItems.length} items monitored</span>
-            </div>
-            <div className="md:hidden flex items-center space-x-4">
-              <span>Last: <span className="text-emerald-400">{lastUpdateTime.toLocaleTimeString()}</span></span>
-              <span>Next: <span className="text-emerald-400">{nextUpdateSeconds}s</span></span>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );
