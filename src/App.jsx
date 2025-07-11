@@ -117,8 +117,13 @@ function App() {
   const addMonitoredItem = (name) => {
     if (!name.trim()) return;
     
+    const trimmedName = name.trim();
+    const itemExists = monitoredItems.some(item => item.name.toLowerCase() === trimmedName.toLowerCase());
+    
+    if (itemExists) return;
+    
     const newItem = {
-      name: name.trim(),
+      name: trimmedName,
       lastValue: 0
     };
     
@@ -168,7 +173,7 @@ function App() {
       />
       
       <div className="flex flex-col flex-1 overflow-hidden">
-        <div className="p-6 flex-1 overflow-auto">
+        <div className="p-6 flex-1 overflow-hidden">
           <div className="flex justify-end items-center mb-6">
             <button
               onClick={fetchStockData}
