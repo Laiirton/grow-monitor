@@ -11,6 +11,7 @@ function App() {
   const [monitoredItems, setMonitoredItems] = useState([]);
   const [categoriesWithMonitoredItems, setCategoriesWithMonitoredItems] = useState({});
   const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
+  const [nextUpdateSeconds, setNextUpdateSeconds] = useState(60);
   const [showUpdateToast, setShowUpdateToast] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   
@@ -48,16 +49,25 @@ function App() {
 
   useEffect(() => {
     fetchStockData();
-    
     const storedItems = localStorage.getItem('monitoredItems');
     if (storedItems) {
       setMonitoredItems(JSON.parse(storedItems));
     }
-    
-    const interval = setInterval(fetchStockData, 60000);
-    
-    return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      setNextUpdateSeconds((prev) => (prev > 1 ? prev - 1 : 60));
+    }, 1000);
+    const fetchInterval = setInterval(fetchStockData, 60000);
+    return () => {
+      clearInterval(interval);
+      clearInterval(fetchInterval);
+    };
   }, []);
+
+  useEffect(() => {
+    if (nextUpdateSeconds === 60) {
+      setLastUpdateTime(new Date());
+    }
+  }, [nextUpdateSeconds]);
   
   // Helper function to check categories with monitored items
   const updateCategoriesWithMonitoredItems = (data, items) => {
@@ -210,6 +220,7 @@ function App() {
           <div className="flex items-center">
             <span>Last update:</span>
             <span className="ml-1 text-green-400 font-medium">{lastUpdateTime.toLocaleTimeString()}</span>
+            <span className="ml-4">Next update in <span className="text-green-400 font-medium">{nextUpdateSeconds}s</span></span>
           </div>
           <div>Garden Stock v1.0.0</div>
         </div>
