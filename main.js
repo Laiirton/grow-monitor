@@ -27,8 +27,8 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
     icon: path.join(__dirname, 'assets/icon.ico'),
-    autoHideMenuBar: true, 
-    frame: true, 
+    autoHideMenuBar: true,
+    frame: true,
   });
 
   const startUrl = isDev
@@ -37,13 +37,24 @@ function createWindow() {
 
   mainWindow.loadURL(startUrl);
 
-  // Removido a abertura automática do DevTools
-  // if (isDev) {
-  //   mainWindow.webContents.openDevTools();
-  // }
-  
-  // Center the window on the screen
   mainWindow.center();
+
+  mainWindow.on('show', () => {
+    notificationCount = 0;
+    app.setBadgeCount(0);
+  });
+  mainWindow.on('focus', () => {
+    notificationCount = 0;
+    app.setBadgeCount(0);
+  });
+  mainWindow.on('restore', () => {
+    notificationCount = 0;
+    app.setBadgeCount(0);
+  });
+  mainWindow.on('focus', () => {
+    notificationCount = 0;
+    app.setBadgeCount(0);
+  });
 
   mainWindow.on('close', (event) => {
     if (!isQuitting) {
@@ -83,8 +94,12 @@ function createTray() {
   tray.setContextMenu(contextMenu);
   
   tray.on('click', () => {
-    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     if (mainWindow.isVisible()) {
+      mainWindow.show();
+      notificationCount = 0;
+      app.setBadgeCount(0);
+    } else {
+      mainWindow.show();
       notificationCount = 0;
       app.setBadgeCount(0);
     }
@@ -92,6 +107,8 @@ function createTray() {
 }
 
 app.whenReady().then(() => {
+  notificationCount = 0;
+  app.setBadgeCount(0);
   createWindow();
   createTray();
 });
