@@ -10,7 +10,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        authors: 'Anjinho Ruindade Pura',
+        authors: 'Anjinho Pirocudo',
       },
     },
     {
