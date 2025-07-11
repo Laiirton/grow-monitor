@@ -1,7 +1,9 @@
 module.exports = {
   packagerConfig: {
     asar: true,
-    icon: './assets/icon.ico'
+    icon: './assets/icon.ico',
+    name: 'Garden Stock',
+    productName: 'Garden Stock'
   },
   rebuildConfig: {},
   makers: [
