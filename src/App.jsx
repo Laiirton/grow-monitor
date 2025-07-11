@@ -26,6 +26,9 @@ function App() {
       setLoading(false);
       setLastUpdateTime(new Date());
       
+      // Reinicia o contador de segundos para 60
+      setNextUpdateSeconds(60);
+      
       // Show the toast notification
       setShowUpdateToast(true);
       
@@ -56,18 +59,48 @@ function App() {
     const interval = setInterval(() => {
       setNextUpdateSeconds((prev) => (prev > 1 ? prev - 1 : 60));
     }, 1000);
-    const fetchInterval = setInterval(fetchStockData, 60000);
+    
+    // Função para a atualização automática
+    const autoFetchData = async () => {
+      try {
+        setIsUpdating(true);
+        const data = await window.electron.apiService.fetchStockData();
+        setStockData(data);
+        setLoading(false);
+        setLastUpdateTime(new Date());
+        
+        // Reinicia o contador de segundos para 60
+        setNextUpdateSeconds(60);
+        
+        // Verificar itens monitorados (sem mostrar o toast de atualização)
+        checkMonitoredItems(data);
+        
+        setTimeout(() => {
+          setIsUpdating(false);
+        }, 300);
+      } catch (err) {
+        setError('Error loading data: ' + err);
+        setLoading(false);
+        setIsUpdating(false);
+      }
+    };
+    
+    const fetchInterval = setInterval(autoFetchData, 60000);
     return () => {
       clearInterval(interval);
       clearInterval(fetchInterval);
     };
   }, []);
 
+  // Removido efeito que atualizava lastUpdateTime quando nextUpdateSeconds = 60,
+  // já que agora atualizamos explicitamente nas funções de atualização
+  
   useEffect(() => {
-    if (nextUpdateSeconds === 60) {
-      setLastUpdateTime(new Date());
+    if (stockData && monitoredItems.length > 0) {
+      const categoriesWithItems = updateCategoriesWithMonitoredItems(stockData, monitoredItems);
+      setCategoriesWithMonitoredItems(categoriesWithItems);
     }
-  }, [nextUpdateSeconds]);
+  }, [stockData, monitoredItems]);
   
   // Helper function to check categories with monitored items
   const updateCategoriesWithMonitoredItems = (data, items) => {
@@ -96,31 +129,44 @@ function App() {
     if (!data || monitoredItems.length === 0) return;
     let updatedMonitoredItems = [...monitoredItems];
     let hasUpdates = false;
+    
     monitoredItems.forEach(item => {
       const categories = ['seedsStock', 'gearStock', 'eggStock', 'honeyStock', 'cosmeticsStock'];
       categories.forEach(category => {
         const foundItem = data[category]?.find(stockItem => 
           stockItem.name.toLowerCase() === item.name.toLowerCase()
         );
+        
+        // Verificar se o item foi encontrado no estoque
         if (foundItem) {
-          window.electron.notificationApi.showNotification(
-            '🌱 Item disponível!',
-            `${foundItem.name} está disponível no estoque!`,
-            foundItem.image
-          );
-          updatedMonitoredItems = updatedMonitoredItems.map(monItem => 
-            monItem.name === item.name 
-              ? {...monItem, lastValue: foundItem.value}
-              : monItem
-          );
-          hasUpdates = true;
+          // Se o item está disponível no estoque (valor > 0), notificar o usuário
+          if (foundItem.value > 0) {
+            // Sempre notificar quando o item estiver em estoque em cada atualização
+            window.electron.notificationApi.showNotification(
+              '🌱 Item em estoque!',
+              `${foundItem.name} está disponível no estoque! (Quantidade: ${foundItem.value})`,
+              foundItem.image
+            );
+          }
+          
+          // Atualizar o valor anterior apenas se ele mudou
+          if (foundItem.value !== item.lastValue) {
+            updatedMonitoredItems = updatedMonitoredItems.map(monItem => 
+              monItem.name === item.name 
+                ? {...monItem, lastValue: foundItem.value}
+                : monItem
+            );
+            hasUpdates = true;
+          }
         }
       });
     });
+    
     if (hasUpdates) {
       setMonitoredItems(updatedMonitoredItems);
       localStorage.setItem('monitoredItems', JSON.stringify(updatedMonitoredItems));
     }
+    
     const categoriesWithItems = updateCategoriesWithMonitoredItems(data, updatedMonitoredItems);
     setCategoriesWithMonitoredItems(categoriesWithItems);
   };
