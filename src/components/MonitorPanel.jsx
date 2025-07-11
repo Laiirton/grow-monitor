@@ -2,20 +2,31 @@ import React, { useState } from 'react';
 
 function MonitorPanel({ monitoredItems, addMonitoredItem, removeMonitoredItem }) {
   const [newItemName, setNewItemName] = useState('');
+  const [duplicateError, setDuplicateError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newItemName.trim()) {
-      addMonitoredItem(newItemName);
-      setNewItemName('');
+      const itemExists = monitoredItems.some(
+        item => item.name.toLowerCase() === newItemName.trim().toLowerCase()
+      );
+      
+      if (itemExists) {
+        setDuplicateError(`"${newItemName}" is already being monitored!`);
+        setTimeout(() => setDuplicateError(''), 3000);
+      } else {
+        addMonitoredItem(newItemName);
+        setNewItemName('');
+        setDuplicateError('');
+      }
     }
   };
 
   return (
-    <div className="bg-[#1f2937] rounded-xl p-6 shadow-lg border border-[#2a3042] h-full">
+    <div className="bg-[#1f2937] rounded-xl p-6 shadow-lg border border-[#2a3042] h-full flex flex-col">
       <h2 className="text-2xl font-semibold mb-6 pb-3 border-b border-[#374151]">Monitoring Panel</h2>
       
-      <form onSubmit={handleSubmit} className="mb-6">
+      <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex shadow-lg">
           <input
             type="text"
@@ -32,38 +43,46 @@ function MonitorPanel({ monitoredItems, addMonitoredItem, removeMonitoredItem })
             +
           </button>
         </div>
+        {duplicateError && (
+          <div className="mt-2 px-3 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg text-sm animate-fade-in">
+            <span className="mr-2">⚠️</span>
+            {duplicateError}
+          </div>
+        )}
       </form>
       
-      <div className="mb-6">
-        <h3 className="font-medium text-gray-200 mb-4 text-lg">Monitored Items:</h3>
+      <div className="mb-4 flex-1 flex flex-col min-h-0">
+        <h3 className="font-medium text-gray-200 mb-3 text-lg">Monitored Items:</h3>
         
         {monitoredItems.length === 0 ? (
           <div className="bg-[#252e3f] rounded-lg p-5 text-center">
             <p className="text-gray-400 text-sm">No items currently being monitored</p>
           </div>
         ) : (
-          <ul className="space-y-3">
-            {monitoredItems.map((item) => (
-              <li 
-                key={item.name}
-                className="bg-[#252e3f] hover:bg-[#2a334a] transition-all duration-200 rounded-lg p-4 flex justify-between items-center border border-[#374151] shadow-md"
-              >
-                <div>
-                  <div className="font-medium text-white">{item.name}</div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    Last value: <span className="font-medium text-green-400">{item.lastValue}</span>
-                  </div>
-                </div>
-                <button
-                  onClick={() => removeMonitoredItem(item.name)}
-                  className="bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-full w-7 h-7 flex items-center justify-center focus:outline-none transition-colors duration-200"
-                  title="Remove from monitoring"
+          <div className="overflow-y-auto pr-1 flex-1 monitor-scrollbar">
+            <ul className="space-y-3">
+              {monitoredItems.map((item) => (
+                <li 
+                  key={item.name}
+                  className="bg-[#252e3f] hover:bg-[#2a334a] transition-all duration-200 rounded-lg p-4 flex justify-between items-center border border-[#374151] shadow-md"
                 >
-                  ✕
-                </button>
-              </li>
-            ))}
-          </ul>
+                  <div>
+                    <div className="font-medium text-white">{item.name}</div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      Last value: <span className="font-medium text-green-400">{item.lastValue}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeMonitoredItem(item.name)}
+                    className="bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-full w-7 h-7 flex items-center justify-center focus:outline-none transition-colors duration-200"
+                    title="Remove from monitoring"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
       
