@@ -19,7 +19,7 @@ let notificationCount = 0;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1500,
+    width: 1600,
     height: 1000,
     minWidth: 940,
     minHeight: 600,
