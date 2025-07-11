@@ -8,11 +8,12 @@ const http = require('http');
 
 if (squirrelStartup) app.quit();
 
-app.setAppUserModelId('garden-stock');
+app.setAppUserModelId('Garden Stock');
 
 let mainWindow;
 let tray = null;
 let isQuitting = false;
+let notificationCount = 0;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -65,7 +66,12 @@ function createTray() {
   }
   
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Open', click: () => mainWindow.show() },
+    { label: 'Open', click: () => {
+        mainWindow.show();
+        notificationCount = 0;
+        app.setBadgeCount(0);
+      }
+    },
     { type: 'separator' },
     { label: 'Exit', click: () => {
       isQuitting = true;
@@ -78,6 +84,10 @@ function createTray() {
   
   tray.on('click', () => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    if (mainWindow.isVisible()) {
+      notificationCount = 0;
+      app.setBadgeCount(0);
+    }
   });
 }
 
@@ -99,7 +109,15 @@ app.on('activate', () => {
 });
 
 ipcMain.on('show-notification', (event, { title, body }) => {
-  new Notification({ title, body }).show();
+  const notifier = require('node-notifier');
+  notifier.notify({
+    title,
+    message: body,
+    icon: path.join(__dirname, 'assets/icon.ico'),
+    appID: 'Garden Stock'
+  });
+  notificationCount++;
+  app.setBadgeCount(notificationCount);
 });
 
 // Function to fetch API data without CORS issues

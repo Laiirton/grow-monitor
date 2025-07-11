@@ -92,10 +92,10 @@ function App() {
         const foundItem = data[category]?.find(stockItem => 
           stockItem.name.toLowerCase() === item.name.toLowerCase()
         );
-        if (foundItem && foundItem.value > 0) {
+        if (foundItem) {
           window.electron.notificationApi.showNotification(
-            '🌱 Item Available!',
-            `${foundItem.name} is available (${foundItem.value} units)!`
+            '🌱 Item disponível!',
+            `${foundItem.name} está disponível no estoque!`
           );
           updatedMonitoredItems = updatedMonitoredItems.map(monItem => 
             monItem.name === item.name 
