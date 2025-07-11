@@ -166,14 +166,16 @@ function App() {
   if (error) return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">{error}</div>;
 
   return (
-    <div className="flex h-screen bg-[#1a202c] text-white overflow-hidden">
+    <div className="flex h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
       {/* Update notification */}
       {showUpdateToast && (
-        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center animate-fade-in-down">
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-          <span>Stock updated successfully!</span>
+        <div className="fixed top-4 right-4 z-50 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center animate-fade-in-down backdrop-blur-sm">
+          <div className="w-5 h-5 mr-3 bg-white rounded-full flex items-center justify-center">
+            <svg className="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <span className="font-medium">Stock updated successfully!</span>
         </div>
       )}
       
@@ -184,22 +186,43 @@ function App() {
       />
       
       <div className="flex flex-col flex-1 overflow-hidden">
-        <div className="p-6 flex-1 overflow-hidden">
-          <div className="flex justify-end items-center mb-6">
+        <header className="p-4 lg:p-6 bg-slate-900/50 backdrop-blur-sm border-b border-slate-700/50">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center">
+                  <span className="text-lg">🌱</span>
+                </div>
+                <h1 className="text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
+                  Garden Stock
+                </h1>
+              </div>
+              <div className="hidden md:flex items-center space-x-4 text-sm text-slate-400">
+                <span>Last update: <span className="text-emerald-400 font-medium">{lastUpdateTime.toLocaleTimeString()}</span></span>
+                <span>Next: <span className="text-emerald-400 font-medium">{nextUpdateSeconds}s</span></span>
+              </div>
+            </div>
+            
             <button
               onClick={fetchStockData}
               disabled={isUpdating}
               className={`${
-                isUpdating ? 'bg-green-700' : 'bg-green-600 hover:bg-green-500'
-              } text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center shadow-md`}
+                isUpdating 
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600' 
+                  : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600'
+              } text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed`}
             >
-              <span className={`mr-2 inline-block ${isUpdating ? 'animate-spin' : ''}`}>↻</span> 
-              {isUpdating ? 'Updating...' : 'Update Stock'}
+              <span className={`mr-2 inline-block ${isUpdating ? 'animate-spin' : ''}`}>
+                {isUpdating ? '⟳' : '↻'}
+              </span> 
+              {isUpdating ? 'Updating...' : 'Update'}
             </button>
           </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
+        </header>
+        
+        <main className="flex-1 overflow-hidden p-4 lg:p-6">
+          <div className="h-full grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <div className="xl:col-span-3 min-h-0">
               <StockDisplay 
                 stockData={stockData} 
                 activeCategory={activeCategory}
@@ -207,7 +230,7 @@ function App() {
               />
             </div>
             
-            <div>
+            <div className="xl:col-span-1 min-h-0">
               <MonitorPanel 
                 monitoredItems={monitoredItems}
                 addMonitoredItem={addMonitoredItem}
@@ -215,15 +238,21 @@ function App() {
               />
             </div>
           </div>
-        </div>
+        </main>
         
-        <div className="px-6 py-2 border-t border-gray-800 text-xs text-gray-500 bg-[#171c26] flex justify-between items-center">
-          <div className="flex items-center">
-            <span>Last update:</span>
-            <span className="ml-1 text-green-400 font-medium">{lastUpdateTime.toLocaleTimeString()}</span>
-            <span className="ml-4">Next update in <span className="text-green-400 font-medium">{nextUpdateSeconds}s</span></span>
+        <footer className="px-4 lg:px-6 py-3 bg-slate-900/50 backdrop-blur-sm border-t border-slate-700/50">
+          <div className="flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 space-y-2 md:space-y-0">
+            <div className="flex items-center space-x-4">
+              <span>🌿 Garden Stock Monitor</span>
+              <span>•</span>
+              <span>{monitoredItems.length} items monitored</span>
+            </div>
+            <div className="md:hidden flex items-center space-x-4">
+              <span>Last: <span className="text-emerald-400">{lastUpdateTime.toLocaleTimeString()}</span></span>
+              <span>Next: <span className="text-emerald-400">{nextUpdateSeconds}s</span></span>
+            </div>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   );
