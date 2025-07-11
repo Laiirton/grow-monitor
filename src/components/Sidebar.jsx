@@ -1,11 +1,11 @@
 import React from 'react';
 
 const categories = [
-  { id: 'seedsStock', name: 'Sementes', icon: '🌱' },
-  { id: 'gearStock', name: 'Ferramentas', icon: '🔧' },
-  { id: 'eggStock', name: 'Ovos', icon: '🥚' },
-  { id: 'cosmeticsStock', name: 'Decorações', icon: '🏡' },
-  { id: 'honeyStock', name: 'Mel', icon: '🍯' },
+  { id: 'seedsStock', name: 'Seeds', icon: '🌱' },
+  { id: 'gearStock', name: 'Tools', icon: '🔧' },
+  { id: 'eggStock', name: 'Eggs', icon: '🥚' },
+  { id: 'cosmeticsStock', name: 'Decorations', icon: '🏡' },
+  { id: 'honeyStock', name: 'Honey', icon: '🍯' },
 ];
 
 function Sidebar({ activeCategory, setActiveCategory, categoriesWithMonitoredItems }) {
@@ -50,7 +50,7 @@ function Sidebar({ activeCategory, setActiveCategory, categoriesWithMonitoredIte
       </nav>
       
       <div className="px-4 py-3 mt-auto bg-[#141921]">
-        <div className="text-xs text-gray-500 text-center">Grow Monitor v1.0.0</div>
+        <div className="text-xs text-gray-500 text-center">Garden Stock v1.0.0</div>
       </div>
     </div>
   );
