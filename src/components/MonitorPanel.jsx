@@ -59,7 +59,7 @@ function MonitorPanel({ monitoredItems, addMonitoredItem, removeMonitoredItem })
             <p className="text-gray-400 text-sm">No items currently being monitored</p>
           </div>
         ) : (
-          <div className="overflow-y-auto pr-1 flex-1 monitor-scrollbar">
+          <div className="overflow-y-auto pr-1 flex-1 monitor-scrollbar max-h-[300px]">
             <ul className="space-y-3">
               {monitoredItems.map((item) => (
                 <li 
