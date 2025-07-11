@@ -1,7 +1,7 @@
 {
-  "name": "grow-monitor",
+  "name": "garden-stock",
   "version": "1.0.0",
-  "description": "Aplicativo desktop para monitorar estoque do Grow Garden",
+  "description": "Aplicativo desktop para monitorar estoque do Grow a Garden",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
