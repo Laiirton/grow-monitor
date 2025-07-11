@@ -3,7 +3,9 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 const squirrelStartup = require('electron-squirrel-startup');
 const https = require('https');
-const http = require('http');
+const fs = require('fs');
+const { tmpdir } = require('os');
+const { basename } = require('path');
 
 
 if (squirrelStartup) app.quit();
@@ -126,16 +128,32 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('show-notification', (event, { title, body }) => {
+ipcMain.on('show-notification', (event, { title, body, image }) => {
   const notifier = require('node-notifier');
-  notifier.notify({
-    title,
-    message: body,
-    icon: path.join(__dirname, 'assets/icon.ico'),
-    appID: 'Garden Stock'
-  });
-  notificationCount++;
-  app.setBadgeCount(notificationCount);
+  function show(imgPath) {
+    notifier.notify({
+      title,
+      message: body,
+      icon: imgPath,
+      appID: 'Garden Stock'
+    });
+    notificationCount++;
+    app.setBadgeCount(notificationCount);
+  }
+  if (image && image.startsWith('http')) {
+    const tempPath = path.join(tmpdir(), basename(image));
+    const file = fs.createWriteStream(tempPath);
+    https.get(image, (response) => {
+      response.pipe(file);
+      file.on('finish', () => {
+        file.close(() => show(tempPath));
+      });
+    }).on('error', () => {
+      show(path.join(__dirname, 'assets/icon.ico'));
+    });
+  } else {
+    show(image || path.join(__dirname, 'assets/icon.ico'));
+  }
 });
 
 // Function to fetch API data without CORS issues
