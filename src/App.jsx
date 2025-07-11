@@ -84,42 +84,32 @@ function App() {
 
   const checkMonitoredItems = (data) => {
     if (!data || monitoredItems.length === 0) return;
-    
     let updatedMonitoredItems = [...monitoredItems];
     let hasUpdates = false;
-    
     monitoredItems.forEach(item => {
       const categories = ['seedsStock', 'gearStock', 'eggStock', 'honeyStock', 'cosmeticsStock'];
-      
       categories.forEach(category => {
         const foundItem = data[category]?.find(stockItem => 
           stockItem.name.toLowerCase() === item.name.toLowerCase()
         );
-        
-        if (foundItem && foundItem.value > item.lastValue) {
+        if (foundItem && foundItem.value > 0) {
           window.electron.notificationApi.showNotification(
             '🌱 Item Available!',
             `${foundItem.name} is available (${foundItem.value} units)!`
           );
-          
           updatedMonitoredItems = updatedMonitoredItems.map(monItem => 
             monItem.name === item.name 
               ? {...monItem, lastValue: foundItem.value}
               : monItem
           );
-          
           hasUpdates = true;
         }
       });
     });
-    
-    // Update monitored items if there are changes
     if (hasUpdates) {
       setMonitoredItems(updatedMonitoredItems);
       localStorage.setItem('monitoredItems', JSON.stringify(updatedMonitoredItems));
     }
-    
-    // Update categories with monitored items
     const categoriesWithItems = updateCategoriesWithMonitoredItems(data, updatedMonitoredItems);
     setCategoriesWithMonitoredItems(categoriesWithItems);
   };
