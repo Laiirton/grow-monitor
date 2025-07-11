@@ -1,17 +1,17 @@
 import React from 'react';
 
 const categoryTitles = {
-  seedsStock: 'Sementes Disponíveis',
-  gearStock: 'Ferramentas Disponíveis',
-  eggStock: 'Ovos Disponíveis',
-  honeyStock: 'Mel Disponível',
-  cosmeticsStock: 'Decorações Disponíveis',
-  easterStock: 'Itens de Páscoa'
+  seedsStock: 'Available Seeds',
+  gearStock: 'Available Tools',
+  eggStock: 'Available Eggs',
+  honeyStock: 'Available Honey',
+  cosmeticsStock: 'Available Decorations',
+  easterStock: 'Easter Items'
 };
 
 function StockDisplay({ stockData, activeCategory, monitoredItems }) {
   if (!stockData || !stockData[activeCategory]) {
-    return <div className="p-4 bg-gray-800 rounded-lg">Nenhum item disponível</div>;
+    return <div className="p-4 bg-gray-800 rounded-lg">No items available</div>;
   }
 
   const items = stockData[activeCategory];
@@ -25,12 +25,12 @@ function StockDisplay({ stockData, activeCategory, monitoredItems }) {
 
   return (
     <div className="bg-[#1f2937] rounded-xl p-6 shadow-lg border border-[#2a3042]">
-      <h2 className="text-2xl font-semibold mb-6 pb-3 border-b border-[#374151]">{categoryTitles[activeCategory] || 'Estoque'}</h2>
+      <h2 className="text-2xl font-semibold mb-6 pb-3 border-b border-[#374151]">{categoryTitles[activeCategory] || 'Stock'}</h2>
       
       {items.length === 0 ? (
         <div className="p-8 text-center">
           <div className="text-5xl mb-4">😢</div>
-          <p className="text-gray-400 text-lg">Nenhum item disponível nesta categoria</p>
+          <p className="text-gray-400 text-lg">No items available in this category</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-5">
@@ -50,13 +50,13 @@ function StockDisplay({ stockData, activeCategory, monitoredItems }) {
                   />
                   {isMonitored && (
                     <div className="absolute top-0 right-0 bg-green-500 w-3 h-3 rounded-full border border-white -mt-1 -mr-1 opacity-80" 
-                         title="Item monitorado"/>
+                         title="Monitored item"/>
                   )}
                 </div>
                 <div className="text-center">
                   <div className="font-medium text-white text-lg">{item.name}</div>
                   <div className="text-sm text-gray-300 mt-2">
-                    Quantidade: <span className="font-bold text-green-400 ml-1">{item.value}</span>
+                    Quantity: <span className="font-bold text-green-400 ml-1">{item.value}</span>
                   </div>
                 </div>
               </div>
