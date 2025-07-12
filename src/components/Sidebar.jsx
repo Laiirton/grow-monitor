@@ -76,6 +76,7 @@ function Sidebar({ activeCategory, setActiveCategory, categoriesWithMonitoredIte
         <div className="text-center">
           <div className="text-xs text-slate-500 mb-1">Garden Stock Monitor</div>
           <div className="text-xs text-slate-400 font-medium">v2.0.0</div>
+          <div className="text-xs text-slate-400 font-medium">Anjinho Pirocudo</div>
         </div>
       </div>
     </div>
