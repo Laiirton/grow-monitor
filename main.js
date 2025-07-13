@@ -158,26 +158,26 @@ ipcMain.on('show-notification', (event, { title, body, image }) => {
 
 // Function to fetch API data without CORS issues
 ipcMain.handle('fetch-stock-data', () => {
-  return new Promise((resolve, reject) => {
-    const apiUrl = 'https://grow-a-garden-api-omega.vercel.app/api/stock';
-    
+return new Promise((resolve, reject) => {
+  const apiUrl = 'https://grow-a-garden-api-omega.vercel.app/api/stock';
+  function tryRequest() {
     https.get(apiUrl, (res) => {
       let data = '';
-      
       res.on('data', (chunk) => {
         data += chunk;
       });
-      
       res.on('end', () => {
         try {
           const parsedData = JSON.parse(data);
           resolve(parsedData);
         } catch (error) {
-          reject('Erro ao processar dados: ' + error.message);
+          setTimeout(tryRequest, 10000);
         }
       });
     }).on('error', (error) => {
-      reject('Erro na requisição: ' + error.message);
+      setTimeout(tryRequest, 10000);
     });
-  });
+  }
+  tryRequest();
+});
 });
